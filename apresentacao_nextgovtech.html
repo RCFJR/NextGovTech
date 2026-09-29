@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next - Gov Tech | Plataforma de Gestão Pública Integrada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f1419;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Padrão de fundo tech */
+        .tech-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(100, 200, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, rgba(100, 200, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 80%, rgba(100, 200, 255, 0.1) 1px, transparent 1px);
+            background-size: 100px 100px, 150px 150px, 120px 120px;
+        }
+
+        /* SVG conectado (rede) */
+        svg.network {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header/Navegação */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 50px;
+            border-bottom: 1px solid rgba(100, 200, 255, 0.2);
+            position: sticky;
+            top: 0;
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #64c8ff;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #64c8ff;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #64c8ff;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #64c8ff, #00d4ff);
+            color: #0f1419;
+            padding: 10px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(100, 200, 255, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 50px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4em;
+            font-weight: 800;
+            margin-bottom: 30px;
+            line-height: 1.2;
+            color: white;
+            max-width: 1000px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #64c8ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            color: #a0a0a0;
+            max-width: 800px;
+            margin: 0 auto 50px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-buttons .cta-button {
+            padding: 15px 35px;
+            font-size: 1.1em;
+        }
+
+        .secondary-button {
+            background: transparent;
+            border: 2px solid #64c8ff;
+            color: #64c8ff;
+            padding: 13px 33px;
+        }
+
+        .secondary-button:hover {
+            background: rgba(100, 200, 255, 0.1);
+        }
+
+        /* Section */
+        section {
+            padding: 100px 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        section h2 {
+            font-size: 3em;
+            margin-bottom: 50px;
+            text-align: center;
+            color: white;
+        }
+
+        section h2 span {
+            background: linear-gradient(135deg, #64c8ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: rgba(100, 200, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            padding: 40px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            background: rgba(100, 200, 255, 0.1);
+            border-color: rgba(100, 200, 255, 0.4);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(100, 200, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #64c8ff;
+        }
+
+        .feature-card p {
+            color: #a0a0a0;
+            line-height: 1.8;
+        }
+
+        /* Diferenciais */
+        .diferenciais {
+            background: rgba(100, 200, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 10px;
+            padding: 60px;
+            margin-top: 60px;
+        }
+
+        .diferenciais-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .diferencial-item {
+            display: flex;
+            gap: 20px;
+        }
+
+        .diferencial-icon {
+            font-size: 2.5em;
+            min-width: 60px;
+        }
+
+        .diferencial-item h4 {
+            color: #64c8ff;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .diferencial-item p {
+            color: #a0a0a0;
+        }
+
+        /* Tecnologias */
+        .tech-stack {
+            background: rgba(100, 200, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 10px;
+            padding: 60px;
+            margin-top: 60px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .tech-item {
+            background: rgba(100, 200, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            border-color: rgba(100, 200, 255, 0.4);
+            background: rgba(100, 200, 255, 0.1);
+        }
+
+        .tech-item h4 {
+            color: #64c8ff;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .tech-item p {
+            color: #a0a0a0;
+            font-size: 0.95em;
+        }
+
+        /* Módulos */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .module-badge {
+            background: rgba(100, 200, 255, 0.1);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            color: #64c8ff;
+            padding: 15px 20px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .module-badge:hover {
+            background: rgba(100, 200, 255, 0.2);
+            border-color: rgba(100, 200, 255, 0.6);
+        }
+
+        /* Stats */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(100, 200, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: rgba(100, 200, 255, 0.4);
+            background: rgba(100, 200, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #64c8ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(100, 200, 255, 0.1), rgba(0, 212, 255, 0.05));
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 10px;
+            padding: 80px 50px;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .cta-section h2 {
+            margin-bottom: 30px;
+        }
+
+        .cta-section p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 50px;
+            border-top: 1px solid rgba(100, 200, 255, 0.2);
+            color: #707070;
+            margin-top: 100px;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        footer a {
+            color: #64c8ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #00d4ff;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 30px;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+            }
+
+            .hero {
+                padding: 60px 30px;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            section {
+                padding: 60px 30px;
+            }
+
+            section h2 {
+                font-size: 2em;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .diferenciais {
+                padding: 40px 30px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .hero-buttons .cta-button {
+                width: 100%;
+            }
+        }
+
+        /* Scroll smooth */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animação ao carregar */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section {
+            animation: fadeInUp 0.8s ease;
+        }
+    </style>
+</head>
+<body>
+    <svg class="network" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <pattern id="dots" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                <circle cx="0" cy="0" r="1" fill="rgba(100, 200, 255, 0.3)"/>
+                <circle cx="200" cy="200" r="1" fill="rgba(100, 200, 255, 0.3)"/>
+                <circle cx="100" cy="100" r="1" fill="rgba(100, 200, 255, 0.3)"/>
+            </pattern>
+        </defs>
+        <g stroke="rgba(100, 200, 255, 0.1)" stroke-width="0.5" opacity="0.4">
+            <line x1="50" y1="50" x2="300" y2="200"/>
+            <line x1="200" y1="100" x2="500" y2="300"/>
+            <line x1="400" y1="150" x2="700" y2="400"/>
+            <line x1="100" y1="300" x2="400" y2="600"/>
+            <line x1="600" y1="200" x2="900" y2="500"/>
+        </g>
+    </svg>
+
+    <div class="tech-pattern"></div>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="logo">Next<span> - Gov Tech</span></div>
+            <nav>
+                <a href="#funcionalidades">Funcionalidades</a>
+                <a href="#diferenciais">Diferenciais</a>
+                <a href="#tecnologia">Tecnologia</a>
+                <a href="#modulos">Módulos</a>
+                <a href="#contato" class="cta-button">Solicitar Demo</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div>
+                <h1>A Próxima Geração em <span>Gestão Pública</span></h1>
+                <p>Plataforma integrada, escalável e segura para modernizar a administração municipal. Transforme a maneira como sua prefeitura opera com tecnologia de ponta, alta disponibilidade e conformidade total com regulamentações federais.</p>
+                <div class="hero-buttons">
+                    <a href="#contato" class="cta-button">Começar Agora</a>
+                    <a href="#" class="secondary-button">Documentação</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="funcionalidades">
+            <h2>Funcionalidades <span>Principais</span></h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Contabilidade Integrada</h3>
+                    <p>Sistema completo de empenho, liquidação e pagamento com conformidade PCASP e geração automática de relatórios fiscais (RREO/RGF).</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Gestão de Receitas</h3>
+                    <p>Tributação, arrecadação de IPTU/ISS/ITBI, NFS-e integrada e dívida ativa com execução fiscal automática.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛒</div>
+                    <h3>Compras e Licitações</h3>
+                    <p>Gerenciamento completo de compras públicas com integração PNCP, habilitação unificada e controle de almoxarifado.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Gestão de RH</h3>
+                    <p>Controle de servidores, folha de pagamento automática com INSS/RPPS, e-Social e integração com comprovante de rendimentos.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏥</div>
+                    <h3>Saúde Municipal</h3>
+                    <p>Sistema integrado com agendamento, prontuário eletrônico, geração de BPA/SIGTAP e conformidade com SIOPS.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Educação</h3>
+                    <p>Gestão de matrículas, merenda escolar (PNAE), transporte com rastreamento GPS e conformidade com censo escolar.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏗️</div>
+                    <h3>Obras Públicas</h3>
+                    <p>Cronograma físico-financeiro, diário de obra, fiscalização e painel de KPIs em tempo real.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>GIS Integrado</h3>
+                    <p>Mapa municipal com georreferenciamento de imóveis, obras, frotas e consulta espacial de todos os dados.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Portal Público</h3>
+                    <p>Transparência e acesso cidadão com portal web público, consulta de despesas, licitações e servidores.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="diferenciais">
+            <h2>Nossos <span>Diferenciais</span></h2>
+            <div class="diferenciais">
+                <div class="diferenciais-grid">
+                    <div class="diferencial-item">
+                        <div class="diferencial-icon">✨</div>
+                        <div>
+                            <h4>30 Módulos Integrados</h4>
+                            <p>Solução completa do início ao fim, sem necessidade de sistemas paralelos. Tudo conectado e sincronizado.</p>
+                        </div>
+                    </div>
+                    <div class="diferencial-item">
+                        <div class="diferencial-icon">🔒</div>
+                        <div>
+                            <h4>Segurança em Primeiro Lugar</h4>
+                            <p>Criptografia AES-256, autenticação Gov.br, ICP-Brasil, LGPD compliance total e auditoria imutável.</p>
+                        </div>
+                    </div>
+                    <div class="diferencial-item">
+                        <div class="diferencial-icon">⚡</div>
+                        <div>
+                            <h4>Alta Disponibilidade</h4>
+                            <p>99.5%+ SLA em ambiente cloud com backup automático, failover instantâneo e zero-downtime deployments.</p>
+                        </div>
+                    </div>
+                    <div class="diferencial-item">
+                        <div class="diferencial-icon">📈</div>
+                        <div>
+                            <h4>Escalabilidade Horizontal</h4>
+                            <p>Arquitetura cloud-native que cresce com sua prefeitura. Suporta de 100 a 100 mil usuários simultâneos.</p>
+                        </div>
+                    </div>
+                    <div class="diferencial-item">
+                        <div class="diferencial-icon">🚀</div>
+                        <div>
+                            <h4>Go-Live Rápido</h4>
+                            <p>Plataforma pronta para uso. Implantação focada em migração de dados e configuração de integrações customizadas.</p>
+                        </div>
+                    </div>
+                    <div class="diferencial-item">
+                        <div class="diferencial-icon">💡</div>
+                        <div>
+                            <h4>Conformidade Regulatória Total</h4>
+                            <p>Aderência a Lei de Responsabilidade Fiscal, Lei de Acesso à Informação, SICONFI, SIAFIC e todas as exigências federais.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tecnologia">
+            <h2>Stack <span>Tecnológico</span></h2>
+            <div class="tech-stack">
+                <p style="color: #a0a0a0; margin-bottom: 30px;">Utilizamos as tecnologias mais modernas e confiáveis do mercado para garantir performance, segurança e escalabilidade.</p>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <h4>.NET 8 / C#</h4>
+                        <p>Backend robusto e de alta performance</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>React + TypeScript</h4>
+                        <p>Interface moderna e responsiva</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>PostgreSQL</h4>
+                        <p>Banco de dados confiável e escalável</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Azure Cloud</h4>
+                        <p>Infraestrutura global com redundância</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Kubernetes</h4>
+                        <p>Orquestração e auto-scaling</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>API REST / GraphQL</h4>
+                        <p>Integração com sistemas externos</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Docker</h4>
+                        <p>Containerização para portabilidade</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>CI/CD Pipeline</h4>
+                        <p>Deploy automático contínuo</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modulos">
+            <h2>30 Módulos <span>Especializados</span></h2>
+            <p style="text-align: center; color: #a0a0a0; margin-bottom: 40px;">Cobertura completa para todas as secretarias municipais</p>
+            <div class="modules-grid">
+                <div class="module-badge">Fundação</div>
+                <div class="module-badge">Contabilidade</div>
+                <div class="module-badge">Planejamento</div>
+                <div class="module-badge">Tributação</div>
+                <div class="module-badge">Compras & Licitações</div>
+                <div class="module-badge">RH & Folha</div>
+                <div class="module-badge">Patrimônio</div>
+                <div class="module-badge">Protocolo</div>
+                <div class="module-badge">Saúde</div>
+                <div class="module-badge">Educação</div>
+                <div class="module-badge">Obras Públicas</div>
+                <div class="module-badge">Transparência</div>
+                <div class="module-badge">BI Executivo</div>
+                <div class="module-badge">Tribunais de Contas</div>
+                <div class="module-badge">Tesouraria</div>
+                <div class="module-badge">Controle Interno</div>
+                <div class="module-badge">Convênios</div>
+                <div class="module-badge">Portal Institucional</div>
+                <div class="module-badge">Frotas</div>
+                <div class="module-badge">Assistência Social</div>
+                <div class="module-badge">Meio Ambiente</div>
+                <div class="module-badge">Segurança Pública</div>
+                <div class="module-badge">Diário Oficial</div>
+                <div class="module-badge">Legislação</div>
+                <div class="module-badge">Urbanismo</div>
+                <div class="module-badge">Posturas</div>
+                <div class="module-badge">GIS</div>
+                <div class="module-badge">Água/Saneamento</div>
+                <div class="module-badge">Cemitério</div>
+                <div class="module-badge">Procuradoria Pública</div>
+            </div>
+            <div class="modules-grid" style="margin-top: 30px;">
+                <div class="module-badge" style="background: linear-gradient(135deg, rgba(100, 200, 255, 0.15), rgba(0, 212, 255, 0.1)); border-color: rgba(100, 200, 255, 0.5);">+ Integrações Genéricas</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Go-Live <span>Rápido</span></h2>
+            <p>Como plataforma SaaS pronta para uso, o tempo de implementação é focado e eficiente:</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Migração de Dados</h3>
+                    <p>Importação estruturada de dados legados com validação automática e auditoria completa.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>Integrações Customizadas</h3>
+                    <p>Setup de conexões com Gov.br, PNCP, receita estadual, NFS-e, CNAB e demais sistemas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h3>Treinamento Dedicado</h3>
+                    <p>Workshops prático-teóricos com suas equipes focados nos módulos que você utilizará.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Por Números</h2>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Módulos Especializados</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">99.5%</div>
+                    <div class="stat-label">Disponibilidade SLA</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">100K+</div>
+                    <div class="stat-label">Usuários Simultâneos</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">256-bit</div>
+                    <div class="stat-label">Criptografia AES</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Downtime (Meta)</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="cta-section">
+            <h2>Pronto para <span>Transformar</span> sua Prefeitura?</h2>
+            <p>Solicite uma demonstração gratuita e conheça como o Next - Gov Tech pode revolucionar a gestão municipal da sua cidade.</p>
+            <a href="#" class="cta-button">Agendar Demonstração →</a>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Next Code Solutions. Todos os direitos reservados.</p>
+            <p><a href="#">Privacidade</a> · <a href="#">Termos de Serviço</a> · <a href="#">Segurança</a> · <a href="#">Conformidade</a></p>
+            <p style="margin-top: 15px; font-size: 0.85em;">www.nextcodeapp.com</p>
+        </footer>
+    </div>
+</body>
+</html>
